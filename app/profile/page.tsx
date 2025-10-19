@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,8 +13,8 @@ import {
   Briefcase,
   Star,
   Calendar,
-  MessageCircle,
-  ArrowLeft,
+  Mail,
+  Edit,
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
@@ -37,27 +39,37 @@ interface UserProfile {
   };
 }
 
-export default function ProfilePage({ params }: { params: { id: string } }) {
+export default function MyProfilePage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchProfile();
-  }, [params.id]);
+    if (status === "unauthenticated") {
+      router.push("/signin");
+      return;
+    }
+
+    if (status === "authenticated") {
+      fetchProfile();
+    }
+  }, [status, router]);
 
   const fetchProfile = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/users/${params.id}`);
-      if (!response.ok) {
+      // Fetch user data
+      const userResponse = await fetch(`/api/users/${session?.user?.id}`);
+      if (!userResponse.ok) {
         throw new Error("Failed to fetch profile");
       }
 
-      const data = await response.json();
-      setProfile(data);
+      const userData = await userResponse.json();
+      setProfile(userData);
     } catch (err: any) {
       setError(err.message || "Failed to load profile");
     } finally {
@@ -65,7 +77,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
     }
   };
 
-  if (loading) {
+  if (status === "loading" || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted/30">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -73,21 +85,23 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
     );
   }
 
-  if (error || !profile) {
+  if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted/30">
         <Card className="max-w-md">
           <CardContent className="pt-6">
-            <p className="text-center text-destructive">
-              {error || "Profile not found"}
-            </p>
-            <Button asChild className="w-full mt-4">
-              <Link href="/discover">Back to Discovery</Link>
+            <p className="text-center text-destructive">{error}</p>
+            <Button onClick={fetchProfile} className="w-full mt-4">
+              Try Again
             </Button>
           </CardContent>
         </Card>
       </div>
     );
+  }
+
+  if (!profile) {
+    return null;
   }
 
   const initials = profile.name
@@ -104,12 +118,15 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
   return (
     <div className="min-h-screen px-4 py-24 bg-muted/30">
       <div className="max-w-5xl mx-auto">
-        <Button asChild variant="ghost" className="mb-6">
-          <Link href="/discover">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Discovery
-          </Link>
-        </Button>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">My Profile</h1>
+          <Button asChild>
+            <Link href="/settings">
+              <Edit className="h-4 w-4 mr-2" />
+              Edit Profile
+            </Link>
+          </Button>
+        </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {/* Main Profile Section */}
@@ -127,7 +144,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <h1 className="text-3xl font-bold">{profile.name}</h1>
+                        <h2 className="text-3xl font-bold">{profile.name}</h2>
                         <Badge className="mt-2 capitalize">{profile.role}</Badge>
                       </div>
                     </div>
@@ -141,6 +158,13 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
                         <Calendar className="h-4 w-4" />
                         <span className="text-sm">Member since {memberSince}</span>
                       </div>
+                    </div>
+
+                    <div className="flex items-center gap-1 mt-3">
+                      <Mail className="h-4 w-4 text-gray-500" />
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        {profile.email}
+                      </span>
                     </div>
 
                     {profile.profile?.rating && (
@@ -228,31 +252,48 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
                       </p>
                     </div>
                   )}
+
+                  {!profile.profile?.bio && !profile.profile?.experience && (
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground mb-4">
+                        Your profile is incomplete. Complete your profile to get better matches!
+                      </p>
+                      <Button asChild>
+                        <Link href="/settings">Complete Profile</Link>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Sidebar Actions */}
+          {/* Sidebar */}
           <div className="space-y-4">
             <Card>
-              <CardContent className="pt-6 space-y-3">
-                <Button asChild className="w-full bg-primary hover:bg-primary/90" size="lg">
-                  <Link href={`/messages?userId=${profile._id}`}>
-                    <MessageCircle className="h-5 w-5 mr-2" />
-                    Send Message
+              <CardHeader>
+                <CardTitle className="text-lg">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button asChild variant="outline" className="w-full justify-start">
+                  <Link href={`/dashboard/${profile.role === "mentor" ? "mentor" : "mentee"}`}>
+                    <LayoutDashboard className="h-4 w-4 mr-2" />
+                    Go to Dashboard
                   </Link>
                 </Button>
-                <p className="text-xs text-center text-gray-500">
-                  Connect with this {profile.role}
-                </p>
+                <Button asChild variant="outline" className="w-full justify-start">
+                  <Link href="/settings">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Profile
+                  </Link>
+                </Button>
               </CardContent>
             </Card>
 
             {profile.profile?.rating && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Quick Stats</CardTitle>
+                  <CardTitle className="text-lg">Your Stats</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
@@ -274,17 +315,6 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
                 </CardContent>
               </Card>
             )}
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Similar {profile.role === "mentor" ? "Mentors" : "Members"}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Button asChild variant="outline" className="w-full">
-                  <Link href="/discover">Browse More</Link>
-                </Button>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>

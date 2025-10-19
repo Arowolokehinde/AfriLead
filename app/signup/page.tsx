@@ -2,57 +2,133 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { FormField } from "@/components/ui/form-field";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { signUpSchema, SignUpFormData } from "@/lib/validations/auth";
+import { africanCountries } from "@/lib/data/countries";
+import { AlertCircle, Loader2, CheckCircle2 } from "lucide-react";
 
 export default function SignUpPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    agreeToTerms: false,
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      role: "mentee",
+    },
   });
 
-  const handleEmailSignUp = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match!");
-      return;
-    }
-    if (!formData.agreeToTerms) {
-      alert("Please agree to the terms and conditions");
-      return;
-    }
-    // TODO: Implement email sign up
-    console.log("Sign up with:", formData);
-    router.push("/onboarding/role");
+  const password = watch("password");
+
+  // Password strength indicators
+  const getPasswordStrength = (pwd: string) => {
+    if (!pwd) return { score: 0, label: "", color: "" };
+
+    let score = 0;
+    if (pwd.length >= 8) score++;
+    if (/[A-Z]/.test(pwd)) score++;
+    if (/[a-z]/.test(pwd)) score++;
+    if (/[0-9]/.test(pwd)) score++;
+    if (pwd.length >= 12) score++;
+
+    if (score <= 2) return { score, label: "Weak", color: "text-red-500" };
+    if (score === 3) return { score, label: "Fair", color: "text-yellow-500" };
+    if (score === 4) return { score, label: "Good", color: "text-blue-500" };
+    return { score, label: "Strong", color: "text-green-500" };
   };
 
-  const handleGoogleSignUp = () => {
-    // TODO: Implement Google sign up
-    console.log("Sign up with Google");
-    router.push("/onboarding/role");
+  const passwordStrength = getPasswordStrength(password || "");
+
+  const onSubmit = async (data: SignUpFormData) => {
+    try {
+      if (!agreeToTerms) {
+        setError("Please agree to the terms and conditions");
+        return;
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      // Create user account with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        signal: controller.signal,
+      }).finally(() => clearTimeout(timeoutId));
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (result.error?.includes('ETIMEOUT') || result.error?.includes('timeout')) {
+          setError("Unable to connect to database. Please check your internet connection and try again.");
+        } else {
+          setError(result.error || "Failed to create account");
+        }
+        return;
+      }
+
+      // Auto sign in after successful registration
+      const signInResult = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (signInResult?.error) {
+        // Account created but signin failed, redirect to signin page
+        router.push("/signin?message=Account created successfully. Please sign in.");
+        return;
+      }
+
+      // Redirect to onboarding
+      router.push("/onboarding/role");
+      router.refresh();
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        setError("Request timed out. The database might be unavailable. Please try again.");
+      } else if (err.message?.includes('fetch')) {
+        setError("Network error. Please check your internet connection and try again.");
+      } else {
+        setError(err.message || "An error occurred during sign up");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-16 bg-muted/30 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
-
-      <div className="w-full max-w-md relative z-10">
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 py-24 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-2xl">
         <div className="text-center mb-6">
           <Link href="/" className="inline-flex items-center space-x-2 mb-4 group">
             <div className="w-10 h-10 bg-primary rounded-lg group-hover:scale-110 transition-transform duration-300 shadow-lg" />
             <span className="text-2xl font-bold text-foreground">AfriLead</span>
           </Link>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">Get Started</h1>
+          <h1 className="text-3xl font-bold mb-2">Get Started</h1>
           <p className="text-sm text-muted-foreground">
             Create your account and start your mentorship journey
           </p>
@@ -60,17 +136,194 @@ export default function SignUpPage() {
 
         <Card className="shadow-xl border border-border">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl">Sign Up</CardTitle>
-            <CardDescription className="text-sm">
-              Choose your preferred sign up method
+            <CardTitle className="text-xl">Create Account</CardTitle>
+            <CardDescription>
+              Fill in your details to get started
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {error && (
+              <div className="flex items-center gap-3 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
+                <p className="text-sm text-destructive">{error}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                label="Full Name"
+                error={errors.name?.message}
+                required
+                htmlFor="name"
+              >
+                <Input
+                  id="name"
+                  {...register("name")}
+                  placeholder="Enter your full name"
+                  className="transition-all duration-300"
+                  disabled={isLoading}
+                />
+              </FormField>
+
+              <FormField
+                label="Email"
+                error={errors.email?.message}
+                required
+                htmlFor="email"
+              >
+                <Input
+                  id="email"
+                  type="email"
+                  {...register("email")}
+                  placeholder="your.email@example.com"
+                  className="transition-all duration-300"
+                  disabled={isLoading}
+                />
+              </FormField>
+
+              <FormField
+                label="Country"
+                error={errors.country?.message}
+                required
+                htmlFor="country"
+              >
+                <Select
+                  onValueChange={(value) => setValue("country", value)}
+                  disabled={isLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your country" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {africanCountries.map((country) => (
+                      <SelectItem key={country} value={country}>
+                        {country}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormField>
+
+              <FormField
+                label="I want to"
+                error={errors.role?.message}
+                required
+                htmlFor="role"
+              >
+                <Select
+                  defaultValue="mentee"
+                  onValueChange={(value) => setValue("role", value as any)}
+                  disabled={isLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="mentee">Find a Mentor</SelectItem>
+                    <SelectItem value="mentor">Become a Mentor</SelectItem>
+                    <SelectItem value="both">Both</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormField>
+
+              <FormField
+                label="Password"
+                error={errors.password?.message}
+                required
+                htmlFor="password"
+              >
+                <Input
+                  id="password"
+                  type="password"
+                  {...register("password")}
+                  placeholder="Create a strong password"
+                  className="transition-all duration-300"
+                  disabled={isLoading}
+                />
+                {password && password.length > 0 && (
+                  <div className="mt-2 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-300 ${
+                            passwordStrength.score <= 2
+                              ? "bg-red-500"
+                              : passwordStrength.score === 3
+                              ? "bg-yellow-500"
+                              : passwordStrength.score === 4
+                              ? "bg-blue-500"
+                              : "bg-green-500"
+                          }`}
+                          style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
+                        />
+                      </div>
+                      <span className={`text-xs font-medium ${passwordStrength.color}`}>
+                        {passwordStrength.label}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <PasswordRequirement met={password.length >= 8} text="At least 8 characters" />
+                      <PasswordRequirement met={/[A-Z]/.test(password)} text="One uppercase letter" />
+                      <PasswordRequirement met={/[a-z]/.test(password)} text="One lowercase letter" />
+                      <PasswordRequirement met={/[0-9]/.test(password)} text="One number" />
+                    </div>
+                  </div>
+                )}
+              </FormField>
+
+              <div className="flex items-start space-x-3 pt-2">
+                <Checkbox
+                  id="terms"
+                  checked={agreeToTerms}
+                  onCheckedChange={(checked) => setAgreeToTerms(checked as boolean)}
+                  disabled={isLoading}
+                />
+                <label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                  I agree to the{" "}
+                  <Link href="/terms" className="text-primary hover:underline transition-colors">
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link href="/privacy" className="text-primary hover:underline transition-colors">
+                    Privacy Policy
+                  </Link>
+                </label>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/90 transition-all duration-300"
+                size="lg"
+                disabled={isLoading || !agreeToTerms}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Creating account...
+                  </>
+                ) : (
+                  "Create Account"
+                )}
+              </Button>
+            </form>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-3 text-muted-foreground">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
             <Button
               variant="outline"
               className="w-full hover:bg-muted transition-all duration-300"
               size="lg"
-              onClick={handleGoogleSignUp}
+              onClick={() => signIn("google", { callbackUrl: "/onboarding/role" })}
+              disabled={isLoading}
             >
               <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                 <path
@@ -92,100 +345,8 @@ export default function SignUpPage() {
               </svg>
               Continue with Google
             </Button>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  Or continue with email
-                </span>
-              </div>
-            </div>
-
-            <form onSubmit={handleEmailSignUp} className="space-y-3">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
-                <Input
-                  id="name"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Enter your full name"
-                  className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="your.email@example.com"
-                  className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="Create a strong password"
-                  className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  placeholder="Re-enter your password"
-                  className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
-
-              <div className="flex items-start space-x-2 pt-1">
-                <Checkbox
-                  id="terms"
-                  checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) =>
-                    setFormData({ ...formData, agreeToTerms: checked as boolean })
-                  }
-                />
-                <label htmlFor="terms" className="text-xs text-muted-foreground leading-relaxed">
-                  I agree to the{" "}
-                  <Link href="/terms" className="text-primary hover:underline transition-colors">
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link href="/privacy" className="text-primary hover:underline transition-colors">
-                    Privacy Policy
-                  </Link>
-                </label>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90 transition-all duration-300"
-                size="lg"
-              >
-                Create Account
-              </Button>
-            </form>
           </CardContent>
-          <CardFooter className="flex justify-center pb-6">
+          <CardFooter className="flex justify-center pb-6 pt-2">
             <p className="text-sm text-muted-foreground">
               Already have an account?{" "}
               <Link href="/signin" className="text-primary font-semibold hover:underline transition-colors">
@@ -195,6 +356,21 @@ export default function SignUpPage() {
           </CardFooter>
         </Card>
       </div>
+    </div>
+  );
+}
+
+function PasswordRequirement({ met, text }: { met: boolean; text: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      {met ? (
+        <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+      ) : (
+        <div className="h-3.5 w-3.5 rounded-full border-2 border-muted-foreground/30" />
+      )}
+      <span className={`text-xs ${met ? "text-green-600" : "text-muted-foreground"}`}>
+        {text}
+      </span>
     </div>
   );
 }

@@ -2,44 +2,74 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Mail } from "lucide-react";
+import { FormField } from "@/components/ui/form-field";
+import { signInSchema, SignInFormData } from "@/lib/validations/auth";
+import { AlertCircle, Loader2 } from "lucide-react";
 
 export default function SignInPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleEmailSignIn = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement email sign in
-    console.log("Sign in with:", email, password);
-    router.push("/dashboard/mentee");
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormData>({
+    resolver: zodResolver(signInSchema),
+  });
 
-  const handleGoogleSignIn = () => {
-    // TODO: Implement Google sign in
-    console.log("Sign in with Google");
-    router.push("/onboarding/role");
+  const onSubmit = async (data: SignInFormData) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (result?.error) {
+        if (result.error.includes('fetch') || result.error.includes('timeout')) {
+          setError("Unable to connect to server. Please check your connection and try again.");
+        } else {
+          setError("Invalid email or password");
+        }
+        return;
+      }
+
+      // Redirect to dashboard after successful login
+      router.push("/dashboard/mentee");
+      router.refresh();
+    } catch (err: any) {
+      if (err.message?.includes('fetch') || err.message?.includes('timeout')) {
+        setError("Network error. Please check your internet connection and try again.");
+      } else {
+        setError(err.message || "An error occurred during sign in");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-16 bg-muted/30 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
-
-      <div className="w-full max-w-md relative z-10">
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 py-20 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-2xl">
         <div className="text-center mb-6">
           <Link href="/" className="inline-flex items-center space-x-2 mb-4 group">
             <div className="w-10 h-10 bg-primary rounded-lg group-hover:scale-110 transition-transform duration-300 shadow-lg" />
             <span className="text-2xl font-bold text-foreground">AfriLead</span>
           </Link>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">Welcome Back</h1>
+          <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
           <p className="text-sm text-muted-foreground">
             Sign in to continue your mentorship journey
           </p>
@@ -48,16 +78,93 @@ export default function SignInPage() {
         <Card className="shadow-xl border border-border">
           <CardHeader className="space-y-1 pb-4">
             <CardTitle className="text-xl">Sign In</CardTitle>
-            <CardDescription className="text-sm">
-              Choose your preferred sign in method
+            <CardDescription>
+              Enter your credentials to access your account
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {error && (
+              <div className="flex items-center gap-3 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
+                <p className="text-sm text-destructive">{error}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                label="Email"
+                error={errors.email?.message}
+                required
+                htmlFor="email"
+              >
+                <Input
+                  id="email"
+                  type="email"
+                  {...register("email")}
+                  placeholder="your.email@example.com"
+                  className="transition-all duration-300"
+                  disabled={isLoading}
+                />
+              </FormField>
+
+              <FormField
+                label="Password"
+                error={errors.password?.message}
+                required
+                htmlFor="password"
+              >
+                <Input
+                  id="password"
+                  type="password"
+                  {...register("password")}
+                  placeholder="Enter your password"
+                  className="transition-all duration-300"
+                  disabled={isLoading}
+                />
+                <div className="flex justify-end mt-2">
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs text-primary hover:underline transition-colors"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+              </FormField>
+
+              <Button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/90 transition-all duration-300"
+                size="lg"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
+              </Button>
+            </form>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-3 text-muted-foreground">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
             <Button
               variant="outline"
               className="w-full hover:bg-muted transition-all duration-300"
               size="lg"
-              onClick={handleGoogleSignIn}
+              onClick={() => signIn("google", { callbackUrl: "/onboarding/role" })}
+              disabled={isLoading}
             >
               <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                 <path
@@ -79,63 +186,8 @@ export default function SignInPage() {
               </svg>
               Continue with Google
             </Button>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  Or continue with email
-                </span>
-              </div>
-            </div>
-
-            <form onSubmit={handleEmailSignIn} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.email@example.com"
-                  className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                  <Link
-                    href="/forgot-password"
-                    className="text-xs text-primary hover:underline transition-colors"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90 transition-all duration-300"
-                size="lg"
-              >
-                Sign In
-              </Button>
-            </form>
           </CardContent>
-          <CardFooter className="flex justify-center pb-6">
+          <CardFooter className="flex justify-center pb-6 pt-2">
             <p className="text-sm text-muted-foreground">
               Don't have an account?{" "}
               <Link href="/signup" className="text-primary font-semibold hover:underline transition-colors">

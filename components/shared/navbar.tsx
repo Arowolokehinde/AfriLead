@@ -2,12 +2,24 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, Globe } from "lucide-react";
+import { Menu, X, ChevronDown, User, LogOut, Settings, LayoutDashboard } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,17 +86,73 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop CTA Buttons */}
+          {/* Desktop CTA Buttons / Profile */}
           <div className="hidden lg:flex items-center space-x-2">
-            <Button asChild variant="ghost" className="font-medium">
-              <Link href="/signin">Sign In</Link>
-            </Button>
-            <Button
-              asChild
-              className="bg-primary hover:bg-primary/90 text-white shadow-lg transition-all duration-300 font-medium"
-            >
-              <Link href="/signup">Get Started</Link>
-            </Button>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={session?.user?.image || ""} />
+                      <AvatarFallback className="bg-primary text-white font-semibold">
+                        {session?.user?.name?.charAt(0).toUpperCase() || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="text-left">
+                      <p className="text-sm font-semibold text-foreground">
+                        {session?.user?.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground capitalize">
+                        {session?.user?.role}
+                      </p>
+                    </div>
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={`/dashboard/${session?.user?.role === "mentor" ? "mentor" : "mentee"}`} className="cursor-pointer">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings" className="cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="cursor-pointer text-red-600"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button asChild variant="ghost" className="font-medium">
+                  <Link href="/signin">Sign In</Link>
+                </Button>
+                <Button
+                  asChild
+                  className="bg-primary hover:bg-primary/90 text-white shadow-lg transition-all duration-300 font-medium"
+                >
+                  <Link href="/signup">Get Started</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -146,27 +214,84 @@ export function Navbar() {
               Impact
             </Link>
 
-            {/* Mobile CTA Buttons */}
+            {/* Mobile CTA Buttons / Profile */}
             <div className="pt-4 space-y-3 border-t border-gray-200 dark:border-gray-800 mt-4">
-              <Button
-                asChild
-                variant="outline"
-                className="w-full justify-center font-medium border"
-                size="lg"
-              >
-                <Link href="/signin" onClick={() => setIsOpen(false)}>
-                  Sign In
-                </Link>
-              </Button>
-              <Button
-                asChild
-                className="w-full justify-center bg-primary hover:bg-primary/90 text-white shadow-lg font-medium"
-                size="lg"
-              >
-                <Link href="/signup" onClick={() => setIsOpen(false)}>
-                  Get Started
-                </Link>
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <div className="flex items-center space-x-3 px-4 py-3 bg-muted rounded-lg">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={session?.user?.image || ""} />
+                      <AvatarFallback className="bg-primary text-white font-semibold">
+                        {session?.user?.name?.charAt(0).toUpperCase() || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        {session?.user?.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground capitalize">
+                        {session?.user?.role}
+                      </p>
+                    </div>
+                  </div>
+                  <Link
+                    href="/profile"
+                    className="flex items-center px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-all duration-200"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <User className="mr-2 h-5 w-5" />
+                    Profile
+                  </Link>
+                  <Link
+                    href={`/dashboard/${session?.user?.role === "mentor" ? "mentor" : "mentee"}`}
+                    className="flex items-center px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-all duration-200"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <LayoutDashboard className="mr-2 h-5 w-5" />
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/settings"
+                    className="flex items-center px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-all duration-200"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Settings className="mr-2 h-5 w-5" />
+                    Settings
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      signOut({ callbackUrl: "/" });
+                    }}
+                    className="w-full flex items-center px-4 py-3 text-base font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
+                  >
+                    <LogOut className="mr-2 h-5 w-5" />
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full justify-center font-medium border"
+                    size="lg"
+                  >
+                    <Link href="/signin" onClick={() => setIsOpen(false)}>
+                      Sign In
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    className="w-full justify-center bg-primary hover:bg-primary/90 text-white shadow-lg font-medium"
+                    size="lg"
+                  >
+                    <Link href="/signup" onClick={() => setIsOpen(false)}>
+                      Get Started
+                    </Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
