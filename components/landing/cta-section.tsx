@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles } from "lucide-react"
+import Link from "next/link"
 
 export function CTASection() {
   const [isVisible, setIsVisible] = useState(false)
@@ -64,18 +65,24 @@ export function CTASection() {
             className={`flex flex-col sm:flex-row gap-4 justify-center items-center pt-4 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             <Button
+              asChild
               size="lg"
               className="bg-white text-primary hover:bg-white/90 text-base md:text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all group"
             >
-              Join AfriLead
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <Link href="/onboarding/role?type=mentee">
+                Join AfriLead
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </Button>
             <Button
+              asChild
               size="lg"
               variant="outline"
               className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 text-base md:text-lg px-8 py-6 rounded-full backdrop-blur-sm"
             >
-              Start Mentoring Today
+              <Link href="/onboarding/role?type=mentor">
+                Start Mentoring Today
+              </Link>
             </Button>
           </div>
         </div>

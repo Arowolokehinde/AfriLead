@@ -1,0 +1,202 @@
+"use client";
+
+import { useState } from "react";
+import { MentorCard } from "@/components/discover/mentor-card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Search, Filter, X } from "lucide-react";
+import { MentorProfile, Interest } from "@/lib/types";
+import { INTERESTS } from "@/lib/constants";
+
+// Mock data - replace with actual API call
+const mockMentors: MentorProfile[] = [
+  {
+    id: "1",
+    name: "Aisha Mohammed",
+    email: "aisha@example.com",
+    role: "mentor",
+    country: "Nigeria",
+    skills: ["Tech", "Business", "Entrepreneurship"] as Interest[],
+    experience: "Senior Product Manager at Microsoft with 10+ years in tech",
+    bio: "Passionate about helping young Africans break into tech. I've mentored 50+ mentees and love seeing them succeed.",
+    availability: "Weekends",
+    sessionsCompleted: 45,
+    rating: 4.9,
+    photoUrl: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "2",
+    name: "Kwame Osei",
+    email: "kwame@example.com",
+    role: "mentor",
+    country: "Ghana",
+    skills: ["Design", "Marketing", "Arts"] as Interest[],
+    experience: "Creative Director at top advertising agency, 8 years experience",
+    bio: "I help creatives find their unique voice and build successful careers in design.",
+    sessionsCompleted: 32,
+    rating: 4.8,
+    photoUrl: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "3",
+    name: "Fatima Hassan",
+    email: "fatima@example.com",
+    role: "mentor",
+    country: "Kenya",
+    skills: ["Finance", "Business", "Entrepreneurship"] as Interest[],
+    experience: "Investment Banker turned Startup Founder, raised $5M in funding",
+    bio: "Guiding entrepreneurs through fundraising, business strategy, and scaling.",
+    sessionsCompleted: 28,
+    rating: 5.0,
+    photoUrl: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+];
+
+export default function DiscoverPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const toggleSkillFilter = (skill: string) => {
+    setSelectedSkills((prev) =>
+      prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
+    );
+  };
+
+  const filteredMentors = mockMentors.filter((mentor) => {
+    const matchesSearch = mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      mentor.skills.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    const matchesSkills = selectedSkills.length === 0 ||
+      selectedSkills.some(skill => mentor.skills.includes(skill));
+
+    return matchesSearch && matchesSkills;
+  });
+
+  return (
+    <div className="min-h-screen px-4 py-24 bg-gradient-to-br from-orange-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2">Discover Mentors</h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Find experienced mentors matched to your interests and goals
+          </p>
+        </div>
+
+        {/* Search and Filters */}
+        <div className="mb-8 space-y-4">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search by name or skill..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2"
+            >
+              <Filter className="h-4 w-4" />
+              Filters
+              {selectedSkills.length > 0 && (
+                <Badge variant="secondary" className="ml-1">
+                  {selectedSkills.length}
+                </Badge>
+              )}
+            </Button>
+          </div>
+
+          {showFilters && (
+            <div className="p-4 border rounded-lg bg-white dark:bg-gray-800">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold">Filter by Skills</h3>
+                {selectedSkills.length > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedSkills([])}
+                  >
+                    Clear all
+                  </Button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {INTERESTS.map((skill) => (
+                  <Badge
+                    key={skill}
+                    variant={selectedSkills.includes(skill) ? "default" : "outline"}
+                    className="cursor-pointer"
+                    onClick={() => toggleSkillFilter(skill)}
+                  >
+                    {skill}
+                    {selectedSkills.includes(skill) && (
+                      <X className="ml-1 h-3 w-3" />
+                    )}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {selectedSkills.length > 0 && (
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <span>Active filters:</span>
+              {selectedSkills.map((skill) => (
+                <Badge
+                  key={skill}
+                  variant="secondary"
+                  className="cursor-pointer"
+                  onClick={() => toggleSkillFilter(skill)}
+                >
+                  {skill}
+                  <X className="ml-1 h-3 w-3" />
+                </Badge>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Results */}
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Showing {filteredMentors.length} mentor{filteredMentors.length !== 1 ? "s" : ""}
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredMentors.map((mentor) => (
+            <MentorCard key={mentor.id} mentor={mentor} matchScore={85} />
+          ))}
+        </div>
+
+        {filteredMentors.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              No mentors found matching your criteria
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedSkills([]);
+              }}
+            >
+              Clear all filters
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

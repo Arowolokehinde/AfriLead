@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles, Users, TrendingUp } from "lucide-react"
 import { useEffect, useState } from "react"
+import Link from "next/link"
 
 export function HeroSection() {
   const [isVisible, setIsVisible] = useState(false)
@@ -54,18 +55,24 @@ export function HeroSection() {
             className={`flex flex-col sm:flex-row gap-4 justify-center items-center pt-4 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             <Button
+              asChild
               size="lg"
               className="bg-white text-primary hover:bg-white/90 text-base md:text-lg px-10 py-7 rounded-full shadow-2xl hover:shadow-white/20 hover:scale-105 transition-all duration-300 group font-semibold"
             >
-              Sign Up Now
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <Link href="/onboarding/role">
+                Sign Up Now
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </Button>
             <Button
+              asChild
               size="lg"
               variant="outline"
               className="bg-transparent text-primary-foreground border-2 border-white/40 hover:bg-white/10 hover:border-white/60 text-base md:text-lg px-10 py-7 rounded-full backdrop-blur-sm transition-all duration-300"
             >
-              Learn More
+              <Link href="/discover">
+                Find a Mentor
+              </Link>
             </Button>
           </div>
 

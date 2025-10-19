@@ -1,10 +1,9 @@
-import { HeroSection } from "@/components/hero-section"
-import { VisionSection } from "@/components/vision-section"
-import { HowItWorksSection } from "@/components/how-it-works-section"
-import { DualValueSection } from "@/components/dual-value-section"
-import { CommunityImpactSection } from "@/components/community-impact-section"
-import { CTASection } from "@/components/cta-section"
-import { Footer } from "@/components/footer"
+import { HeroSection } from "@/components/landing/hero-section"
+import { VisionSection } from "@/components/landing/vision-section"
+import { HowItWorksSection } from "@/components/landing/how-it-works-section"
+import { DualValueSection } from "@/components/landing/dual-value-section"
+import { CommunityImpactSection } from "@/components/landing/community-impact-section"
+import { CTASection } from "@/components/landing/cta-section"
 
 export default function Home() {
   return (
@@ -15,7 +14,6 @@ export default function Home() {
       <DualValueSection />
       <CommunityImpactSection />
       <CTASection />
-      <Footer />
     </main>
   )
 }
