@@ -58,7 +58,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
 
   if (sessionCompleted) {
     return (
-      <div className="min-h-screen px-4 py-24 bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="min-h-screen px-4 py-24 bg-muted/30">
         <div className="max-w-2xl mx-auto text-center">
           <div className="mb-6">
             <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -84,7 +84,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="min-h-screen px-4 py-24 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen px-4 py-24 bg-muted/30">
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
           <h1 className="text-4xl font-bold mb-2">Mentorship Session</h1>
@@ -199,9 +199,9 @@ export default function SessionPage({ params }: { params: { id: string } }) {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col items-center text-center">
-                  <Avatar className="h-20 w-20 mb-3">
+                  <Avatar className="h-20 w-20 mb-3 ring-2 ring-primary/10">
                     <AvatarImage src={session.mentor.photoUrl} />
-                    <AvatarFallback className="bg-gradient-to-br from-orange-400 to-green-400 text-white text-xl">
+                    <AvatarFallback className="bg-primary text-white text-xl font-semibold">
                       {session.mentor.name
                         .split(" ")
                         .map((n) => n[0])

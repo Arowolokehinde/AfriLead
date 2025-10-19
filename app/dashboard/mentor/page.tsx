@@ -75,69 +75,72 @@ export default function MentorDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen px-4 py-24 bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen px-4 py-20 bg-muted/30 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Mentor Dashboard</h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Mentor Dashboard</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
             Manage your mentorship connections and track your impact
           </p>
         </div>
 
         {/* Stats Overview */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Pending Requests</p>
-                  <p className="text-3xl font-bold">{requests.length}</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <Card className="shadow-lg border border-border hover:shadow-xl transition-all duration-300">
+            <CardContent className="pt-5 pb-5">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-muted-foreground font-medium">Pending</p>
+                  <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
+                    <Users className="h-5 w-5 text-white" />
+                  </div>
                 </div>
-                <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center">
-                  <Users className="h-6 w-6 text-orange-600" />
-                </div>
+                <p className="text-2xl md:text-3xl font-bold">{requests.length}</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Active Mentees</p>
-                  <p className="text-3xl font-bold">{mockActiveMentees.length}</p>
+          <Card className="shadow-lg border border-border hover:shadow-xl transition-all duration-300">
+            <CardContent className="pt-5 pb-5">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-muted-foreground font-medium">Active</p>
+                  <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center shadow-lg">
+                    <TrendingUp className="h-5 w-5 text-white" />
+                  </div>
                 </div>
-                <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                  <TrendingUp className="h-6 w-6 text-green-600" />
-                </div>
+                <p className="text-2xl md:text-3xl font-bold">{mockActiveMentees.length}</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Sessions Completed</p>
-                  <p className="text-3xl font-bold">45</p>
+          <Card className="shadow-lg border border-border hover:shadow-xl transition-all duration-300">
+            <CardContent className="pt-5 pb-5">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-muted-foreground font-medium">Sessions</p>
+                  <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                    <Calendar className="h-5 w-5 text-white" />
+                  </div>
                 </div>
-                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                  <Calendar className="h-6 w-6 text-blue-600" />
-                </div>
+                <p className="text-2xl md:text-3xl font-bold">45</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Average Rating</p>
-                  <p className="text-3xl font-bold">4.9</p>
+          <Card className="shadow-lg border border-border hover:shadow-xl transition-all duration-300">
+            <CardContent className="pt-5 pb-5">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-muted-foreground font-medium">Rating</p>
+                  <div className="w-10 h-10 bg-yellow-500 rounded-xl flex items-center justify-center shadow-lg">
+                    <Star className="h-5 w-5 text-white" />
+                  </div>
                 </div>
-                <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
-                  <Star className="h-6 w-6 text-yellow-600" />
-                </div>
+                <p className="text-2xl md:text-3xl font-bold">4.9</p>
               </div>
             </CardContent>
           </Card>
@@ -145,14 +148,14 @@ export default function MentorDashboardPage() {
 
         {/* Main Content */}
         <Tabs defaultValue="requests" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="requests">
+          <TabsList className="bg-muted/50 p-1">
+            <TabsTrigger value="requests" className="text-xs md:text-sm">
               Pending Requests ({requests.length})
             </TabsTrigger>
-            <TabsTrigger value="active">
+            <TabsTrigger value="active" className="text-xs md:text-sm">
               Active Mentees ({mockActiveMentees.length})
             </TabsTrigger>
-            <TabsTrigger value="completed">
+            <TabsTrigger value="completed" className="text-xs md:text-sm">
               Completed
             </TabsTrigger>
           </TabsList>
@@ -172,11 +175,11 @@ export default function MentorDashboardPage() {
                 ))}
               </div>
             ) : (
-              <Card>
+              <Card className="shadow-lg border border-border">
                 <CardContent className="pt-6 text-center py-12">
-                  <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 dark:text-gray-400">No pending requests</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+                  <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No pending requests</p>
+                  <p className="text-sm text-muted-foreground/70 mt-2">
                     New mentorship requests will appear here
                   </p>
                 </CardContent>
@@ -185,25 +188,25 @@ export default function MentorDashboardPage() {
           </TabsContent>
 
           <TabsContent value="active">
-            <Card>
-              <CardHeader>
-                <CardTitle>Active Mentorship Connections</CardTitle>
+            <Card className="shadow-lg border border-border">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl">Active Mentorship Connections</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {mockActiveMentees.map((mentee) => (
-                    <div key={mentee.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div key={mentee.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-primary hover:shadow-lg transition-all duration-300 bg-card">
                       <div>
-                        <p className="font-semibold">{mentee.name}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="font-semibold text-base">{mentee.name}</p>
+                        <p className="text-xs md:text-sm text-muted-foreground">
                           {mentee.sessionsCompleted} sessions completed
                         </p>
                       </div>
                       <div className="flex gap-2">
-                        <button className="text-sm text-blue-600 hover:underline">
+                        <button className="text-xs md:text-sm text-primary hover:underline transition-colors">
                           View Profile
                         </button>
-                        <button className="text-sm text-green-600 hover:underline">
+                        <button className="text-xs md:text-sm text-accent hover:underline transition-colors">
                           Message
                         </button>
                       </div>
@@ -215,10 +218,10 @@ export default function MentorDashboardPage() {
           </TabsContent>
 
           <TabsContent value="completed">
-            <Card>
+            <Card className="shadow-lg border border-border">
               <CardContent className="pt-6 text-center py-12">
-                <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 dark:text-gray-400">No completed mentorships yet</p>
+                <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">No completed mentorships yet</p>
               </CardContent>
             </Card>
           </TabsContent>

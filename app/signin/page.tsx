@@ -29,30 +29,33 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-20 bg-gradient-to-br from-orange-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center space-x-2 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-green-500 rounded-lg" />
-            <span className="text-2xl font-bold">AfriLead</span>
+    <div className="min-h-screen flex items-center justify-center px-4 py-16 bg-muted/30 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+
+      <div className="w-full max-w-md relative z-10">
+        <div className="text-center mb-6">
+          <Link href="/" className="inline-flex items-center space-x-2 mb-4 group">
+            <div className="w-10 h-10 bg-primary rounded-lg group-hover:scale-110 transition-transform duration-300 shadow-lg" />
+            <span className="text-2xl font-bold text-foreground">AfriLead</span>
           </Link>
-          <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2">Welcome Back</h1>
+          <p className="text-sm text-muted-foreground">
             Sign in to continue your mentorship journey
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign In</CardTitle>
-            <CardDescription>
+        <Card className="shadow-xl border border-border">
+          <CardHeader className="space-y-1 pb-4">
+            <CardTitle className="text-xl">Sign In</CardTitle>
+            <CardDescription className="text-sm">
               Choose your preferred sign in method
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full hover:bg-muted transition-all duration-300"
               size="lg"
               onClick={handleGoogleSignIn}
             >
@@ -82,7 +85,7 @@ export default function SignInPage() {
                 <Separator />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white dark:bg-gray-950 px-2 text-gray-500">
+                <span className="bg-card px-2 text-muted-foreground">
                   Or continue with email
                 </span>
               </div>
@@ -90,7 +93,7 @@ export default function SignInPage() {
 
             <form onSubmit={handleEmailSignIn} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -98,15 +101,16 @@ export default function SignInPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your.email@example.com"
+                  className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
                 />
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password" className="text-sm font-medium">Password</Label>
                   <Link
                     href="/forgot-password"
-                    className="text-sm text-orange-600 hover:underline"
+                    className="text-xs text-primary hover:underline transition-colors"
                   >
                     Forgot password?
                   </Link>
@@ -118,22 +122,23 @@ export default function SignInPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
+                  className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
                 />
               </div>
 
               <Button
                 type="submit"
-                className="w-full bg-orange-600 hover:bg-orange-700"
+                className="w-full bg-primary hover:bg-primary/90 transition-all duration-300"
                 size="lg"
               >
                 Sign In
               </Button>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+          <CardFooter className="flex justify-center pb-6">
+            <p className="text-sm text-muted-foreground">
               Don't have an account?{" "}
-              <Link href="/signup" className="text-orange-600 font-semibold hover:underline">
+              <Link href="/signup" className="text-primary font-semibold hover:underline transition-colors">
                 Sign up
               </Link>
             </p>

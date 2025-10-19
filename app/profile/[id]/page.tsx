@@ -63,7 +63,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
   });
 
   return (
-    <div className="min-h-screen px-4 py-24 bg-gradient-to-br from-orange-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen px-4 py-24 bg-muted/30">
       <div className="max-w-5xl mx-auto">
         <Button asChild variant="ghost" className="mb-6">
           <Link href="/discover">
@@ -78,9 +78,9 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-start gap-6 mb-6">
-                  <Avatar className="h-24 w-24">
+                  <Avatar className="h-24 w-24 ring-2 ring-primary/10">
                     <AvatarImage src={profile.photoUrl} alt={profile.name} />
-                    <AvatarFallback className="bg-gradient-to-br from-orange-400 to-green-400 text-white text-2xl">
+                    <AvatarFallback className="bg-primary text-white text-2xl font-semibold">
                       {initials}
                     </AvatarFallback>
                   </Avatar>

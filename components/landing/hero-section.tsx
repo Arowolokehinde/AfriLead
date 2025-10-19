@@ -13,7 +13,7 @@ export function HeroSection() {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80">
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-primary pt-14 md:pt-16">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl animate-float" />
@@ -26,33 +26,33 @@ export function HeroSection() {
       </div>
 
       {/* Hero content */}
-      <div className="relative z-10 container mx-auto px-4 py-20 md:py-32">
-        <div className="max-w-5xl mx-auto text-center space-y-8">
+      <div className="relative z-10 container mx-auto px-4 py-12 md:py-16">
+        <div className="max-w-5xl mx-auto text-center space-y-6 md:space-y-8">
           {/* Badge */}
           <div
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            <Sparkles className="w-4 h-4 text-white" />
-            <span className="text-sm font-medium text-primary-foreground">Redefining Africa's Future</span>
+            <Sparkles className="w-3.5 h-3.5 text-white" />
+            <span className="text-xs md:text-sm font-medium text-primary-foreground">Redefining Africa's Future</span>
           </div>
 
           {/* Main headline */}
           <h1
-            className={`text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight text-balance transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight text-balance transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             Empowering Africa's Next Generation Through <span className="text-white drop-shadow-lg">Mentorship</span>
           </h1>
 
           {/* Subtext */}
           <p
-            className={`text-lg md:text-xl lg:text-2xl text-primary-foreground/90 max-w-3xl mx-auto leading-relaxed text-pretty transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`text-lg md:text-xl text-primary-foreground/90 max-w-3xl mx-auto leading-relaxed text-pretty transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             From local dreams to global impact — AfriLead connects you with the mentors who see your potential before
             the world does.
           </p>
 
           <div
-            className={`flex flex-col sm:flex-row gap-4 justify-center items-center pt-4 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`flex flex-col sm:flex-row gap-3 justify-center items-center pt-2 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             <Button
               asChild
@@ -77,38 +77,38 @@ export function HeroSection() {
           </div>
 
           <div
-            className={`flex flex-wrap justify-center gap-8 md:gap-12 pt-8 transition-all duration-700 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`flex flex-wrap justify-center gap-4 md:gap-8 pt-6 md:pt-8 transition-all duration-700 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-              <Users className="w-5 h-5 text-white" />
+            <div className="flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-all duration-300">
+              <Users className="w-4 h-4 md:w-5 md:h-5 text-white flex-shrink-0" />
               <div className="text-left">
-                <div className="text-2xl font-bold text-white">10K+</div>
-                <div className="text-xs text-primary-foreground/80">Active Members</div>
+                <div className="text-lg md:text-2xl font-bold text-white leading-tight">10K+</div>
+                <div className="text-[10px] md:text-xs text-primary-foreground/80">Active Members</div>
               </div>
             </div>
-            <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-              <TrendingUp className="w-5 h-5 text-white" />
+            <div className="flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-all duration-300">
+              <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-white flex-shrink-0" />
               <div className="text-left">
-                <div className="text-2xl font-bold text-white">500+</div>
-                <div className="text-xs text-primary-foreground/80">Expert Mentors</div>
+                <div className="text-lg md:text-2xl font-bold text-white leading-tight">500+</div>
+                <div className="text-[10px] md:text-xs text-primary-foreground/80">Expert Mentors</div>
               </div>
             </div>
-            <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-all duration-300">
+              <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-white flex-shrink-0" />
               <div className="text-left">
-                <div className="text-2xl font-bold text-white">50+</div>
-                <div className="text-xs text-primary-foreground/80">Countries</div>
+                <div className="text-lg md:text-2xl font-bold text-white leading-tight">50+</div>
+                <div className="text-[10px] md:text-xs text-primary-foreground/80">Countries</div>
               </div>
             </div>
           </div>
 
           <div
-            className={`mt-16 transition-all duration-700 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`mt-8 md:mt-12 transition-all duration-700 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             <div className="relative w-full max-w-4xl mx-auto">
               {/* Decorative elements around image */}
-              <div className="absolute -top-4 -left-4 w-24 h-24 border-t-4 border-l-4 border-white/30 rounded-tl-3xl" />
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 border-b-4 border-r-4 border-white/30 rounded-br-3xl" />
+              <div className="absolute -top-3 -left-3 w-16 h-16 md:w-24 md:h-24 border-t-4 border-l-4 border-white/30 rounded-tl-3xl" />
+              <div className="absolute -bottom-3 -right-3 w-16 h-16 md:w-24 md:h-24 border-b-4 border-r-4 border-white/30 rounded-br-3xl" />
 
               <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/20">
                 <img
@@ -116,12 +116,12 @@ export function HeroSection() {
                   alt="African youth connected through mentorship"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-primary/20 to-transparent" />
+                <div className="absolute inset-0 bg-primary/20" />
 
                 {/* Floating badge on image */}
-                <div className="absolute bottom-6 left-6 flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 backdrop-blur-sm shadow-lg">
+                <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  <span className="text-sm font-semibold text-primary">Join the Movement</span>
+                  <span className="text-xs md:text-sm font-semibold text-primary">Join the Movement</span>
                 </div>
               </div>
             </div>

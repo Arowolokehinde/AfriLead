@@ -81,36 +81,39 @@ export default function DiscoverPage() {
   });
 
   return (
-    <div className="min-h-screen px-4 py-24 bg-gradient-to-br from-orange-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen px-4 py-20 bg-muted/30 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Discover Mentors</h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Discover Mentors</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
             Find experienced mentors matched to your interests and goals
           </p>
         </div>
 
         {/* Search and Filters */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-6 space-y-4">
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search by name or skill..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 transition-all duration-300 focus:ring-2 focus:ring-primary/20 border-2 border-border/50 hover:border-primary/20"
               />
             </div>
             <Button
               variant="outline"
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 hover:bg-muted transition-all duration-300"
             >
               <Filter className="h-4 w-4" />
               Filters
               {selectedSkills.length > 0 && (
-                <Badge variant="secondary" className="ml-1">
+                <Badge variant="secondary" className="ml-1 bg-primary text-primary-foreground">
                   {selectedSkills.length}
                 </Badge>
               )}
@@ -118,14 +121,15 @@ export default function DiscoverPage() {
           </div>
 
           {showFilters && (
-            <div className="p-4 border rounded-lg bg-white dark:bg-gray-800">
+            <div className="p-4 border border-border rounded-xl bg-card shadow-lg">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold">Filter by Skills</h3>
+                <h3 className="text-sm font-semibold">Filter by Skills</h3>
                 {selectedSkills.length > 0 && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedSkills([])}
+                    className="text-xs hover:text-primary"
                   >
                     Clear all
                   </Button>
@@ -136,7 +140,7 @@ export default function DiscoverPage() {
                   <Badge
                     key={skill}
                     variant={selectedSkills.includes(skill) ? "default" : "outline"}
-                    className="cursor-pointer"
+                    className={`cursor-pointer transition-all duration-300 text-xs ${selectedSkills.includes(skill) ? "bg-primary hover:bg-primary/90" : "hover:bg-muted"}`}
                     onClick={() => toggleSkillFilter(skill)}
                   >
                     {skill}
@@ -150,13 +154,13 @@ export default function DiscoverPage() {
           )}
 
           {selectedSkills.length > 0 && (
-            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-              <span>Active filters:</span>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+              <span className="font-medium">Active filters:</span>
               {selectedSkills.map((skill) => (
                 <Badge
                   key={skill}
                   variant="secondary"
-                  className="cursor-pointer"
+                  className="cursor-pointer hover:bg-muted transition-colors text-xs"
                   onClick={() => toggleSkillFilter(skill)}
                 >
                   {skill}
@@ -169,20 +173,20 @@ export default function DiscoverPage() {
 
         {/* Results */}
         <div className="mb-4">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-xs md:text-sm text-muted-foreground font-medium">
             Showing {filteredMentors.length} mentor{filteredMentors.length !== 1 ? "s" : ""}
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredMentors.map((mentor) => (
             <MentorCard key={mentor.id} mentor={mentor} matchScore={85} />
           ))}
         </div>
 
         {filteredMentors.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+          <div className="text-center py-16">
+            <p className="text-muted-foreground mb-4">
               No mentors found matching your criteria
             </p>
             <Button
@@ -191,6 +195,7 @@ export default function DiscoverPage() {
                 setSearchQuery("");
                 setSelectedSkills([]);
               }}
+              className="hover:bg-muted transition-all duration-300"
             >
               Clear all filters
             </Button>

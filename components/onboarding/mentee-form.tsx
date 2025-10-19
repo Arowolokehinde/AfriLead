@@ -48,28 +48,29 @@ export function MenteeForm() {
   };
 
   return (
-    <Card className="max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>Create Your Mentee Profile</CardTitle>
-        <CardDescription>
+    <Card className="max-w-2xl mx-auto shadow-xl border border-border">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-xl md:text-2xl">Create Your Mentee Profile</CardTitle>
+        <CardDescription className="text-sm">
           Tell us about yourself so we can match you with the perfect mentor
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name *</Label>
+            <Label htmlFor="name" className="text-sm font-medium">Full Name *</Label>
             <Input
               id="name"
               required
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="Enter your full name"
+              className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
+            <Label htmlFor="email" className="text-sm font-medium">Email *</Label>
             <Input
               id="email"
               type="email"
@@ -77,13 +78,14 @@ export function MenteeForm() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="your.email@example.com"
+              className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="country">Country *</Label>
+            <Label htmlFor="country" className="text-sm font-medium">Country *</Label>
             <Select value={formData.country} onValueChange={(value) => setFormData({ ...formData, country: value })}>
-              <SelectTrigger>
+              <SelectTrigger className="transition-all duration-300 focus:ring-2 focus:ring-primary/20">
                 <SelectValue placeholder="Select your country" />
               </SelectTrigger>
               <SelectContent>
@@ -97,10 +99,10 @@ export function MenteeForm() {
           </div>
 
           <div className="space-y-2">
-            <Label>Areas of Interest * (Select at least 1)</Label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <Label className="text-sm font-medium">Areas of Interest * (Select at least 1)</Label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
               {INTERESTS.map((interest) => (
-                <div key={interest} className="flex items-center space-x-2">
+                <div key={interest} className="flex items-center space-x-2 bg-muted/30 hover:bg-muted/50 px-3 py-2 rounded-lg transition-colors">
                   <Checkbox
                     id={`interest-${interest}`}
                     checked={formData.interests.includes(interest)}
@@ -118,10 +120,10 @@ export function MenteeForm() {
           </div>
 
           <div className="space-y-2">
-            <Label>Your Goals * (Select at least 1)</Label>
-            <div className="grid grid-cols-2 gap-3">
+            <Label className="text-sm font-medium">Your Goals * (Select at least 1)</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
               {GOALS.map((goal) => (
-                <div key={goal} className="flex items-center space-x-2">
+                <div key={goal} className="flex items-center space-x-2 bg-muted/30 hover:bg-muted/50 px-3 py-2 rounded-lg transition-colors">
                   <Checkbox
                     id={`goal-${goal}`}
                     checked={formData.goals.includes(goal)}
@@ -136,19 +138,20 @@ export function MenteeForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="bio">Tell us about yourself (Optional)</Label>
+            <Label htmlFor="bio" className="text-sm font-medium">Tell us about yourself (Optional)</Label>
             <Textarea
               id="bio"
               value={formData.bio}
               onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
               placeholder="Share a bit about your background, what you're working on, or what you hope to achieve..."
               rows={4}
+              className="transition-all duration-300 focus:ring-2 focus:ring-primary/20 resize-none"
             />
           </div>
 
           <Button
             type="submit"
-            className="w-full bg-orange-600 hover:bg-orange-700"
+            className="w-full bg-primary hover:bg-primary/90 transition-all duration-300"
             size="lg"
             disabled={formData.interests.length === 0 || formData.goals.length === 0}
           >

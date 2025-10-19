@@ -27,47 +27,48 @@ export function CTASection() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-32 bg-background relative overflow-hidden">
+    <section ref={sectionRef} className="py-16 md:py-24 bg-background relative overflow-hidden">
+      {/* Animated background elements */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-accent/80" />
+        <div className="absolute inset-0 bg-primary" />
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-20 left-10 w-96 h-96 bg-white/20 rounded-full blur-3xl animate-float" />
+          <div className="absolute top-10 md:top-20 left-5 md:left-10 w-64 h-64 md:w-96 md:h-96 bg-white/10 rounded-full blur-3xl animate-float" />
           <div
-            className="absolute bottom-20 right-10 w-96 h-96 bg-accent/30 rounded-full blur-3xl animate-float"
+            className="absolute bottom-10 md:bottom-20 right-5 md:right-10 w-64 h-64 md:w-96 md:h-96 bg-white/5 rounded-full blur-3xl animate-float"
             style={{ animationDelay: "1.5s" }}
           />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/10 rounded-full blur-3xl animate-glow" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:64px_64px]" />
         </div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
+        <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
           <div
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-700 hover:bg-white/15 hover:scale-105 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            <Sparkles className="w-4 h-4 text-white" />
-            <span className="text-sm font-medium text-primary-foreground">Join the Movement</span>
+            <Sparkles className="w-3.5 h-3.5 text-white" />
+            <span className="text-xs md:text-sm font-medium text-primary-foreground">Join the Movement</span>
           </div>
 
           <h2
-            className={`text-3xl md:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight text-balance transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground leading-tight text-balance transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
-            Africa doesn't need permission to lead. <span className="text-white">It just needs a platform.</span>
+            Africa doesn't need permission to lead. <span className="text-white drop-shadow-lg">It just needs a platform.</span>
           </h2>
 
           <p
-            className={`text-lg md:text-xl text-primary-foreground/90 leading-relaxed text-pretty transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`text-base md:text-lg text-primary-foreground/90 leading-relaxed text-pretty max-w-2xl mx-auto transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             Be part of the movement that's redefining Africa's future, one mentorship at a time.
           </p>
 
           <div
-            className={`flex flex-col sm:flex-row gap-4 justify-center items-center pt-4 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            className={`flex flex-col sm:flex-row gap-3 justify-center items-center pt-2 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           >
             <Button
               asChild
               size="lg"
-              className="bg-white text-primary hover:bg-white/90 text-base md:text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all group"
+              className="bg-white text-primary hover:bg-white/90 text-base md:text-lg px-10 py-7 rounded-full shadow-2xl hover:shadow-white/20 hover:scale-105 transition-all duration-300 group font-semibold"
             >
               <Link href="/onboarding/role?type=mentee">
                 Join AfriLead
@@ -78,12 +79,30 @@ export function CTASection() {
               asChild
               size="lg"
               variant="outline"
-              className="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 text-base md:text-lg px-8 py-6 rounded-full backdrop-blur-sm"
+              className="bg-transparent text-primary-foreground border-2 border-white/40 hover:bg-white/10 hover:border-white/60 text-base md:text-lg px-10 py-7 rounded-full backdrop-blur-sm transition-all duration-300"
             >
               <Link href="/onboarding/role?type=mentor">
                 Start Mentoring Today
               </Link>
             </Button>
+          </div>
+
+          {/* Trust indicators */}
+          <div
+            className={`flex flex-wrap justify-center gap-6 md:gap-8 pt-6 md:pt-8 transition-all duration-700 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+          >
+            <div className="flex items-center gap-2 text-white/80">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <span className="text-xs md:text-sm font-medium">10,000+ Active Members</span>
+            </div>
+            <div className="flex items-center gap-2 text-white/80">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <span className="text-xs md:text-sm font-medium">500+ Expert Mentors</span>
+            </div>
+            <div className="flex items-center gap-2 text-white/80">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <span className="text-xs md:text-sm font-medium">50+ Countries</span>
+            </div>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-green-500 rounded-lg" />
+              <div className="w-8 h-8 bg-primary rounded-lg" />
               <span className="text-xl font-bold text-white">AfriLead</span>
             </div>
             <p className="text-sm">

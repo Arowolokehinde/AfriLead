@@ -15,32 +15,35 @@ export default function RoleSelectionPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-20 bg-gradient-to-br from-orange-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-4xl w-full">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Choose Your Path</h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
+    <div className="min-h-screen flex items-center justify-center px-4 py-16 bg-muted/30 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+
+      <div className="max-w-4xl w-full relative z-10">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3">Choose Your Path</h1>
+          <p className="text-base md:text-lg text-muted-foreground">
             Are you looking to guide others or seeking guidance?
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-6">
           <Card
-            className={`cursor-pointer border-2 hover:border-orange-500 hover:shadow-lg transition-all ${
-              preselectedType === "mentee" ? "border-orange-500 shadow-lg" : ""
+            className={`cursor-pointer border-2 hover:border-primary hover:shadow-xl hover:scale-[1.02] transition-all duration-300 group ${
+              preselectedType === "mentee" ? "border-primary shadow-xl scale-[1.02]" : "border-border"
             }`}
             onClick={() => handleRoleSelection("mentee")}
           >
             <CardContent className="pt-8 pb-8 text-center">
-              <div className="w-20 h-20 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                <GraduationCap className="h-10 w-10 text-orange-600" />
+              <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <GraduationCap className="h-8 w-8 text-white" />
               </div>
-              <h2 className="text-2xl font-bold mb-4">I'm a Mentee</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
+              <h2 className="text-2xl font-bold mb-3">I'm a Mentee</h2>
+              <p className="text-sm md:text-base text-muted-foreground mb-6 leading-relaxed">
                 Looking for career guidance, learning support, and professional growth opportunities.
               </p>
               <Button
-                className="w-full bg-orange-600 hover:bg-orange-700"
+                className="w-full bg-primary hover:bg-primary/90 transition-all duration-300"
                 size="lg"
               >
                 Find a Mentor
@@ -49,21 +52,21 @@ export default function RoleSelectionPage() {
           </Card>
 
           <Card
-            className={`cursor-pointer border-2 hover:border-green-500 hover:shadow-lg transition-all ${
-              preselectedType === "mentor" ? "border-green-500 shadow-lg" : ""
+            className={`cursor-pointer border-2 hover:border-accent hover:shadow-xl hover:scale-[1.02] transition-all duration-300 group ${
+              preselectedType === "mentor" ? "border-accent shadow-xl scale-[1.02]" : "border-border"
             }`}
             onClick={() => handleRoleSelection("mentor")}
           >
             <CardContent className="pt-8 pb-8 text-center">
-              <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Users className="h-10 w-10 text-green-600" />
+              <div className="w-16 h-16 bg-accent rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <Users className="h-8 w-8 text-white" />
               </div>
-              <h2 className="text-2xl font-bold mb-4">I'm a Mentor</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
+              <h2 className="text-2xl font-bold mb-3">I'm a Mentor</h2>
+              <p className="text-sm md:text-base text-muted-foreground mb-6 leading-relaxed">
                 Ready to share my experience and help guide the next generation of African leaders.
               </p>
               <Button
-                className="w-full bg-green-600 hover:bg-green-700"
+                className="w-full bg-accent hover:bg-accent/90 transition-all duration-300"
                 size="lg"
               >
                 Become a Mentor
@@ -72,7 +75,7 @@ export default function RoleSelectionPage() {
           </Card>
         </div>
 
-        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8">
+        <p className="text-center text-xs md:text-sm text-muted-foreground mt-6">
           You can always switch roles later in your account settings
         </p>
       </div>

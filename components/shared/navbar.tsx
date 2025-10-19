@@ -34,11 +34,8 @@ export function Navbar() {
         <div className="flex justify-between items-center h-14 md:h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
-            <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 via-orange-600 to-green-500 rounded-lg shadow-md group-hover:shadow-orange-500/50 transition-shadow duration-300" />
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-green-400 rounded-lg opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300" />
-            </div>
-            <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+            <div className="w-8 h-8 bg-primary rounded-lg shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110" />
+            <span className="text-lg md:text-xl font-bold text-foreground">
               AfriLead
             </span>
           </Link>
@@ -84,7 +81,7 @@ export function Navbar() {
             </Button>
             <Button
               asChild
-              className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 font-medium"
+              className="bg-primary hover:bg-primary/90 text-white shadow-lg transition-all duration-300 font-medium"
             >
               <Link href="/signup">Get Started</Link>
             </Button>
@@ -154,7 +151,7 @@ export function Navbar() {
               <Button
                 asChild
                 variant="outline"
-                className="w-full justify-center font-medium border-2"
+                className="w-full justify-center font-medium border"
                 size="lg"
               >
                 <Link href="/signin" onClick={() => setIsOpen(false)}>
@@ -163,7 +160,7 @@ export function Navbar() {
               </Button>
               <Button
                 asChild
-                className="w-full justify-center bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white shadow-lg shadow-orange-500/30 font-medium"
+                className="w-full justify-center bg-primary hover:bg-primary/90 text-white shadow-lg font-medium"
                 size="lg"
               >
                 <Link href="/signup" onClick={() => setIsOpen(false)}>

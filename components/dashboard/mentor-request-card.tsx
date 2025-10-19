@@ -32,43 +32,43 @@ export function MentorRequestCard({ mentee, requestDate, message, onAccept, onRe
   };
 
   return (
-    <Card>
+    <Card className="shadow-lg border border-border hover:shadow-xl hover:border-primary transition-all duration-300">
       <CardContent className="pt-6">
         <div className="flex items-start gap-4 mb-4">
-          <Avatar className="h-12 w-12">
+          <Avatar className="h-14 w-14 ring-2 ring-primary/10">
             <AvatarImage src={mentee.photoUrl} alt={mentee.name} />
-            <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-400 text-white">
+            <AvatarFallback className="bg-primary text-white font-semibold">
               {initials}
             </AvatarFallback>
           </Avatar>
 
-          <div className="flex-1">
-            <h3 className="font-semibold">{mentee.name}</h3>
-            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mt-1">
-              <MapPin className="h-3 w-3 mr-1" />
-              {mentee.country}
+          <div className="flex-1 min-w-0">
+            <h3 className="font-bold text-base truncate">{mentee.name}</h3>
+            <div className="flex items-center text-xs text-muted-foreground mt-1">
+              <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
+              <span className="truncate">{mentee.country}</span>
             </div>
-            <div className="flex items-center text-xs text-gray-500 dark:text-gray-500 mt-1">
-              <Clock className="h-3 w-3 mr-1" />
+            <div className="flex items-center text-xs text-muted-foreground/70 mt-1">
+              <Clock className="h-3 w-3 mr-1 flex-shrink-0" />
               {timeAgo(requestDate)}
             </div>
           </div>
         </div>
 
         {message && (
-          <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-            <p className="text-sm text-gray-700 dark:text-gray-300 italic">
+          <div className="mb-4 p-3 bg-muted/30 rounded-lg border border-border/50">
+            <p className="text-xs text-foreground/80 italic leading-relaxed">
               "{message}"
             </p>
           </div>
         )}
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div>
-            <span className="text-xs font-semibold text-gray-500 uppercase">Interests</span>
-            <div className="flex flex-wrap gap-1 mt-1">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Interests</span>
+            <div className="flex flex-wrap gap-1.5 mt-1.5">
               {mentee.interests.map((interest) => (
-                <Badge key={interest} variant="outline" className="text-xs">
+                <Badge key={interest} variant="outline" className="text-xs border-primary/20 hover:bg-primary/5 transition-colors">
                   {interest}
                 </Badge>
               ))}
@@ -76,10 +76,10 @@ export function MentorRequestCard({ mentee, requestDate, message, onAccept, onRe
           </div>
 
           <div>
-            <span className="text-xs font-semibold text-gray-500 uppercase">Goals</span>
-            <div className="flex flex-wrap gap-1 mt-1">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Goals</span>
+            <div className="flex flex-wrap gap-1.5 mt-1.5">
               {mentee.goals.map((goal) => (
-                <Badge key={goal} variant="secondary" className="text-xs">
+                <Badge key={goal} variant="secondary" className="text-xs bg-accent/10 text-accent border border-accent/20">
                   {goal}
                 </Badge>
               ))}
@@ -88,16 +88,16 @@ export function MentorRequestCard({ mentee, requestDate, message, onAccept, onRe
         </div>
       </CardContent>
 
-      <CardFooter className="flex gap-2">
+      <CardFooter className="flex gap-2 pt-4 pb-5">
         <Button
           variant="outline"
-          className="flex-1"
+          className="flex-1 text-xs hover:bg-muted transition-all"
           onClick={onReject}
         >
           Decline
         </Button>
         <Button
-          className="flex-1 bg-green-600 hover:bg-green-700"
+          className="flex-1 text-xs bg-accent hover:bg-accent/90 transition-all"
           onClick={onAccept}
         >
           Accept & Connect

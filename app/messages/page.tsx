@@ -87,7 +87,7 @@ export default function MessagesPage() {
   };
 
   return (
-    <div className="min-h-screen px-4 py-24 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen px-4 py-24 bg-muted/30">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <h1 className="text-4xl font-bold mb-2">Messages</h1>
@@ -130,9 +130,9 @@ export default function MessagesPage() {
                     }`}
                   >
                     <div className="flex items-start gap-3">
-                      <Avatar>
+                      <Avatar className="ring-2 ring-primary/10">
                         <AvatarImage src={conversation.photoUrl} />
-                        <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-400 text-white">
+                        <AvatarFallback className="bg-primary text-white font-semibold">
                           {initials}
                         </AvatarFallback>
                       </Avatar>
@@ -162,9 +162,9 @@ export default function MessagesPage() {
             {/* Chat Header */}
             <div className="p-4 border-b flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Avatar>
+                <Avatar className="ring-2 ring-primary/10">
                   <AvatarImage src={selectedConversation.photoUrl} />
-                  <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-400 text-white">
+                  <AvatarFallback className="bg-primary text-white font-semibold">
                     {selectedConversation.name
                       .split(" ")
                       .map((n) => n[0])
