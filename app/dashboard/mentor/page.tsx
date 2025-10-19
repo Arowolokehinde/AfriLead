@@ -13,7 +13,7 @@ const mockRequests = [
     id: "1",
     mentee: {
       id: "m1",
-      name: "Chioma Nwosu",
+      name: "Agukwe Henry",
       email: "chioma@example.com",
       role: "mentee" as const,
       country: "Nigeria",
@@ -30,7 +30,7 @@ const mockRequests = [
     id: "2",
     mentee: {
       id: "m2",
-      name: "Ahmed Osman",
+      name: "Theophilus Uchechukwu",
       email: "ahmed@example.com",
       role: "mentee" as const,
       country: "Egypt",
@@ -48,7 +48,7 @@ const mockRequests = [
 const mockActiveMentees = [
   {
     id: "m3",
-    name: "Grace Mwangi",
+    name: "Arowolo Kehinde",
     email: "grace@example.com",
     role: "mentee" as const,
     country: "Kenya",

@@ -36,7 +36,7 @@ export interface User {
 
 export interface MentorProfile extends User {
   role: "mentor";
-  skills: Interest[];
+  skills: string[];
   bio?: string;
   experience?: string;
   availability?: string;
@@ -46,8 +46,8 @@ export interface MentorProfile extends User {
 
 export interface MenteeProfile extends User {
   role: "mentee";
-  interests: Interest[];
-  goals: Goal[];
+  interests: string[];
+  goals: string[];
   bio?: string;
   sessionsCompleted: number;
 }
