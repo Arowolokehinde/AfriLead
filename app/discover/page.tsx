@@ -44,8 +44,8 @@ const mockMentors: MentorProfile[] = [
   },
   {
     id: "3",
-    name: "Aisha Mohammed",
-    email: "AishaMohammed@gmail.com",
+    name: "Henry Agukwe",
+    email: "Henryd@gmail.com",
     role: "mentor",
     country: "Nigeria",
     skills: ["Finance", "Business", "Entrepreneurship"] as Interest[],
