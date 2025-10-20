@@ -8,40 +8,21 @@ const testimonials = [
   {
     quote:
       "My mentor helped me find clarity in my career path. I went from feeling lost to landing my dream job in tech.",
-    name: "Amara O.",
+    name: "Sultan Alaka.",
     role: "Software Developer",
     location: "Lagos, Nigeria",
   },
   {
     quote: "Through AfriLead, I discovered my strength as a leader. The guidance I received changed everything for me.",
-    name: "Kwame A.",
+    name: "Ayomide Ayomikun.",
     role: "Social Entrepreneur",
-    location: "Accra, Ghana",
+    location: "Lagos, Nigeria",
   },
   {
     quote: "Being a mentor has been just as rewarding as being mentored. Watching young people grow is incredible.",
-    name: "Zainab M.",
-    role: "Marketing Director",
-    location: "Nairobi, Kenya",
-  },
-  {
-    quote:
-      "AfriLead gave me access to opportunities I never knew existed. My mentor opened doors I didn't know were there.",
-    name: "Thabo L.",
-    role: "Data Analyst",
-    location: "Johannesburg, South Africa",
-  },
-  {
-    quote: "The community here is amazing. It's not just mentorship—it's a family that believes in your potential.",
-    name: "Fatima S.",
-    role: "UX Designer",
-    location: "Kigali, Rwanda",
-  },
-  {
-    quote: "I learned that my background doesn't limit my future. My mentor showed me that anything is possible.",
-    name: "Emmanuel K.",
-    role: "Business Analyst",
-    location: "Kampala, Uganda",
+    name: "Theophilus Uchechukwu",
+    role: "Software Engineer",
+    location: "Lagos, Nigeria",
   },
 ]
 
