@@ -13,7 +13,7 @@ import { INTERESTS } from "@/lib/constants";
 const mockMentors: MentorProfile[] = [
   {
     id: "1",
-    name: "Arowolo Kenhinde",
+    name: "Arowolo Kehinde",
     email: "Kenny@gmail.com",
     role: "mentor",
     country: "Nigeria",
